@@ -60,61 +60,6 @@
         </BinaryOption>
         <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lockTranslationTitle" />
       </Bitmap>
-      <Text profile="fs25_settingsSectionHeader" name="sectionHeader" text="$l10n_fp_section_lml" />
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <BinaryOption profile="fs25_settingsBinaryOption" id="opt_lmlEnabled">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlEnabledTT" />
-        </BinaryOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlEnabledTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <BinaryOption profile="fs25_settingsBinaryOption" id="opt_lmlHydraulic">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlHydraulicTT" />
-        </BinaryOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlHydraulicTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <MultiTextOption profile="fs25_settingsMultiTextOption" id="opt_lmlKnmPerTonne">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlKnmPerTonneTT" />
-        </MultiTextOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlKnmPerTonneTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <BinaryOption profile="fs25_settingsBinaryOption" id="opt_lmlStability">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlStabilityTT" />
-        </BinaryOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlStabilityTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <MultiTextOption profile="fs25_settingsMultiTextOption" id="opt_lmlStabilitySafety">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlStabilitySafetyTT" />
-        </MultiTextOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlStabilitySafetyTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <MultiTextOption profile="fs25_settingsMultiTextOption" id="opt_lmlSlowdownStart">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlSlowdownStartTT" />
-        </MultiTextOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlSlowdownStartTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <BinaryOption profile="fs25_settingsBinaryOption" id="opt_lmlSagging">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlSaggingTT" />
-        </BinaryOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlSaggingTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <MultiTextOption profile="fs25_settingsMultiTextOption" id="opt_lmlSagSpeed">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlSagSpeedTT" />
-        </MultiTextOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlSagSpeedTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <BinaryOption profile="fs25_settingsBinaryOption" id="opt_lmlShowInfo">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_lmlShowInfoTT" />
-        </BinaryOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lmlShowInfoTitle" />
-      </Bitmap>
     </ScrollingLayout>
     <Bitmap profile="fs25_settingsTooltipSeparator" />
     <Bitmap profile="fs25_startClipper" name="topClipper" />

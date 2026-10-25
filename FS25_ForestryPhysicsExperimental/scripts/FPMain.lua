@@ -107,10 +107,9 @@ function FP:loadMap(filename)
     end
 
     local s = FP.s
-    FP.logInfo("Loaded. Log weight %s (x%.2f), grapples %s (claws x%g, mount x%g, max %g°), load moment limiter %s (hydraulic %s %g kNm/t, stability %s %d %%).",
+    FP.logInfo("Loaded. Log weight %s (x%.2f), grapples %s (claws x%g, mount x%g, max %g°).",
         tostring(s.logWeightEnabled), s.logWeightScale, tostring(s.grabEnabled), s.clawStrength, s.mountStiffness,
-        s.maxWobbleDeg, tostring(s.lmlEnabled), tostring(s.lmlHydraulic), s.lmlKnmPerTonne, tostring(s.lmlStability),
-        math.floor(s.lmlStabilitySafety * 100 + 0.5))
+        s.maxWobbleDeg)
 end
 
 function FP:onConsoleMenu()
@@ -145,7 +144,6 @@ end
 function FP:updateInternal(dt)
     FP.processPendingShapes()
     FP.processClawUpdates()
-    FP.LML.update(dt)
 
     self.cleanupTimer = (self.cleanupTimer or 0) + dt
     if self.cleanupTimer > FP.CLEANUP_INTERVAL then

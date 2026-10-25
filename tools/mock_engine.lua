@@ -41,6 +41,7 @@ getXMLBool = function(id, k) local v = py_get(id, k) if v == nil then return nil
 hasXMLProperty = function(id, k) return py_has(id, k) end
 setXMLFloat = function(id, k, v) py_set(id, k, string.format("%.4f", v)) end
 setXMLBool = function(id, k, v) py_set(id, k, v and "true" or "false") end
+setXMLInt = function(id, k, v) py_set(id, k, tostring(math.floor(v))) end
 createFolder = function() end
 
 -- ---------------------------------------------------------------- scene graph

@@ -15,6 +15,8 @@ FP.MOD_NAME = g_currentModName
 FP.MOD_DIR = g_currentModDirectory
 FP.CONFIG_FILE = "xml/forestryPhysics.xml"
 FP.USER_SETTINGS_FILE = "FS25_ForestryPhysicsExperimental.xml"
+-- user files written with an older settings version are ignored once, so new defaults take effect
+FP.SETTINGS_VERSION = 2
 FP.LOG_PREFIX = "[ForestryPhysics] "
 
 function FP.logInfo(fmt, ...)
@@ -42,7 +44,6 @@ local function fmtPercent(v) return string.format("%d %%", math.floor(v * 100 + 
 local function fmtFactor(v) return string.format("x%.2f", v) end
 local function fmtScale(v) return string.format("x%g", v) end
 local function fmtDegree(v) return string.format("%g°", v) end
-local function fmtKnm(v) return string.format("%g kNm/t", v) end
 
 -- settings shown in the in-game menu, in display order
 FP.SETTINGS = {
@@ -57,17 +58,6 @@ FP.SETTINGS = {
     { key = "mountStiffness",     type = "list", values = {1, 2, 3, 4, 5, 6, 8, 10, 15}, format = fmtScale },
     { key = "maxWobbleDeg",       type = "list", values = {1, 2, 3, 5, 8, 10, 15, 25, 45}, format = fmtDegree },
     { key = "lockTranslation",    type = "bool" },
-
-    { section = "lml" },
-    { key = "lmlEnabled",         type = "bool" },
-    { key = "lmlHydraulic",       type = "bool" },
-    { key = "lmlKnmPerTonne",     type = "list", values = range(5, 20, 1), format = fmtKnm },
-    { key = "lmlStability",       type = "bool" },
-    { key = "lmlStabilitySafety", type = "list", values = range(0.5, 0.95, 0.05), format = fmtPercent },
-    { key = "lmlSlowdownStart",   type = "list", values = range(0.6, 0.95, 0.05), format = fmtPercent },
-    { key = "lmlSagging",         type = "bool" },
-    { key = "lmlSagSpeed",        type = "list", values = range(0.1, 1.0, 0.1), format = fmtPercent },
-    { key = "lmlShowInfo",        type = "bool" },
 }
 
 FP.SETTINGS_BY_KEY = {}
@@ -87,22 +77,12 @@ function FP.getHardDefaults()
         densities = {},
 
         grabEnabled = true,
-        clawStrength = 5,
-        mountStiffness = 5,
-        maxWobbleDeg = 5,
+        clawStrength = 3,
+        mountStiffness = 3,
+        maxWobbleDeg = 8,
         lockTranslation = true,
         translationRange = 0.03,
         massReference = 1.0,
-
-        lmlEnabled = true,
-        lmlHydraulic = true,
-        lmlKnmPerTonne = 10,
-        lmlStability = true,
-        lmlStabilitySafety = 0.8,
-        lmlSlowdownStart = 0.85,
-        lmlSagging = true,
-        lmlSagSpeed = 0.3,
-        lmlShowInfo = true,
     }
 end
 
@@ -167,17 +147,6 @@ function FP.loadDefaults()
     s.lockTranslation = readBool(xmlFile, k .. "#lockTranslation", s.lockTranslation)
     s.translationRange = readFloat(xmlFile, k .. "#translationRange", s.translationRange, 0)
 
-    k = "forestryPhysics.loadMomentLimiter"
-    s.lmlEnabled = readBool(xmlFile, k .. "#enabled", s.lmlEnabled)
-    s.lmlHydraulic = readBool(xmlFile, k .. "#hydraulicLimit", s.lmlHydraulic)
-    s.lmlKnmPerTonne = readFloat(xmlFile, k .. "#kNmPerTonne", s.lmlKnmPerTonne, 1)
-    s.lmlStability = readBool(xmlFile, k .. "#stabilityLimit", s.lmlStability)
-    s.lmlStabilitySafety = readFloat(xmlFile, k .. "#stabilitySafety", s.lmlStabilitySafety, 0.1)
-    s.lmlSlowdownStart = readFloat(xmlFile, k .. "#slowdownStart", s.lmlSlowdownStart, 0.1)
-    s.lmlSagging = readBool(xmlFile, k .. "#sagging", s.lmlSagging)
-    s.lmlSagSpeed = readFloat(xmlFile, k .. "#sagSpeed", s.lmlSagSpeed, 0.01)
-    s.lmlShowInfo = readBool(xmlFile, k .. "#showInfo", s.lmlShowInfo)
-
     delete(xmlFile)
     return s
 end
@@ -210,6 +179,12 @@ function FP.loadUserSettings(s)
     end
     local xmlFile = loadXMLFile("forestryPhysicsUser", path)
     if xmlFile == nil or xmlFile == 0 then
+        return false
+    end
+    local version = getXMLInt(xmlFile, "forestryPhysicsSettings#version") or 1
+    if version < FP.SETTINGS_VERSION then
+        delete(xmlFile)
+        FP.logInfo("Settings file is from an older version, using the new defaults.")
         return false
     end
     for _, d in ipairs(FP.SETTINGS) do
@@ -246,6 +221,7 @@ function FP.saveUserSettings()
         FP.logWarning("Could not write '%s'.", tostring(path))
         return false
     end
+    setXMLInt(xmlFile, "forestryPhysicsSettings#version", FP.SETTINGS_VERSION)
     for _, d in ipairs(FP.SETTINGS) do
         if d.key ~= nil then
             local key = "forestryPhysicsSettings." .. d.key

@@ -11,14 +11,9 @@ TEXTS = {
     'fp_guiTitle': ('Forst-Physik (experimentell)', 'Forestry Physics (experimental)'),
     'fp_buttonReset': ('Standardwerte', 'Defaults'),
     'input_FORESTRY_PHYSICS_MENU': ('Forst-Physik: Einstellungen', 'Forestry physics: settings'),
-    'fp_lmlLimit': ('Lastmoment %d %% (%s) – Kran begrenzt', 'Load moment %d %% (%s) – crane limited'),
-    'fp_lmlSagging': ('Lastmoment %d %% (%s) – Kran sackt ab', 'Load moment %d %% (%s) – crane sagging'),
-    'fp_lmlReasonHydraulic': ('Hydraulik', 'hydraulics'),
-    'fp_lmlReasonStability': ('Standsicherheit', 'stability'),
 
     'fp_section_logWeight': ('Frischholz-Gewicht', 'Fresh-cut log weight'),
     'fp_section_grab': ('Greifer', 'Grapples'),
-    'fp_section_lml': ('Lastmomentbegrenzung (Kran)', 'Load moment limiter (crane)'),
 
     'logWeightEnabled': (('Frischholz-Gewicht', 'Neu geschnittene Stämme bekommen das Gewicht von frischem, nassem Holz.'),
                          ('Fresh-cut log weight', 'Newly cut logs get the weight of fresh, wet wood.')),
@@ -38,24 +33,6 @@ TEXTS = {
     'lockTranslation': (('Rutschen verhindern', 'Stämme rutschen in Greifern ohne feste Achsen nicht mehr frei hin und her.'),
                         ('Prevent sliding', 'Logs no longer slide freely in grapples without locked axes.')),
 
-    'lmlEnabled': (('Lastmomentbegrenzung', 'Kran bremst und stoppt bei zu viel Last zu weit draußen und sackt bei Überlast ab.'),
-                   ('Load moment limiter', 'The crane slows down and stops with too much load too far out, and sags when overloaded.')),
-    'lmlHydraulic': (('Hydraulik-Grenze', 'Begrenzt das Hubmoment (Last x Reichweite) wie bei einem echten Kran.'),
-                     ('Hydraulic limit', 'Limits the lifting moment (load x reach) like a real crane.')),
-    'lmlKnmPerTonne': (('Hubmoment je Tonne Maschine', 'Erlaubtes Hubmoment pro Tonne Maschinengewicht. Echte Forstkräne: etwa 8-11 kNm/t.'),
-                       ('Lift moment per machine tonne', 'Allowed lifting moment per tonne of machine weight. Real forestry cranes: about 8-11 kNm/t.')),
-    'lmlStability': (('Kippschutz', 'Begrenzt den Kran, bevor die Maschine kippt (aus Gewicht, Schwerpunkt und Radstellung).'),
-                     ('Tip protection', 'Limits the crane before the machine tips over (from weight, centre of mass and wheel positions).')),
-    'lmlStabilitySafety': (('Kippschutz greift bei', 'Anteil der Kipplast, bei dem der Kran stoppt. Kleiner = sicherer.'),
-                           ('Tip protection at', 'Share of the tipping load at which the crane stops. Lower = safer.')),
-    'lmlSlowdownStart': (('Abbremsen ab', 'Ab dieser Auslastung wird der Kran beim Ausfahren langsamer.'),
-                         ('Slow down from', 'From this utilisation the crane slows down when moving out.')),
-    'lmlSagging': (('Absacken bei Überlast', 'Über 100 % senkt sich der Ausleger langsam ab.'),
-                   ('Sag when overloaded', 'Above 100 % the boom slowly lowers.')),
-    'lmlSagSpeed': (('Absack-Geschwindigkeit', 'Anteil der normalen Kran-Geschwindigkeit beim Absacken.'),
-                    ('Sag speed', 'Share of the normal crane speed while sagging.')),
-    'lmlShowInfo': (('Hinweis anzeigen', 'Zeigt die Auslastung an, wenn der Kran begrenzt wird.'),
-                    ('Show hint', 'Shows the utilisation when the crane is limited.')),
 }
 
 

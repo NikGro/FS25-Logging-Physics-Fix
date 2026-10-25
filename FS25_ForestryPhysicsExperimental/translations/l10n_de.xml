@@ -5,13 +5,8 @@
         <text name="fp_guiTitle" text="Forst-Physik (experimentell)" />
         <text name="fp_buttonReset" text="Standardwerte" />
         <text name="input_FORESTRY_PHYSICS_MENU" text="Forst-Physik: Einstellungen" />
-        <text name="fp_lmlLimit" text="Lastmoment %d %% (%s) – Kran begrenzt" />
-        <text name="fp_lmlSagging" text="Lastmoment %d %% (%s) – Kran sackt ab" />
-        <text name="fp_lmlReasonHydraulic" text="Hydraulik" />
-        <text name="fp_lmlReasonStability" text="Standsicherheit" />
         <text name="fp_section_logWeight" text="Frischholz-Gewicht" />
         <text name="fp_section_grab" text="Greifer" />
-        <text name="fp_section_lml" text="Lastmomentbegrenzung (Kran)" />
         <text name="fp_logWeightEnabledTitle" text="Frischholz-Gewicht" />
         <text name="fp_logWeightEnabledTT" text="Neu geschnittene Stämme bekommen das Gewicht von frischem, nassem Holz." />
         <text name="fp_logWeightScaleTitle" text="Gewichts-Faktor" />
@@ -28,23 +23,5 @@
         <text name="fp_maxWobbleDegTT" text="Wie weit der Stamm im Greifer kippen darf. Gilt ab dem nächsten Greifen." />
         <text name="fp_lockTranslationTitle" text="Rutschen verhindern" />
         <text name="fp_lockTranslationTT" text="Stämme rutschen in Greifern ohne feste Achsen nicht mehr frei hin und her." />
-        <text name="fp_lmlEnabledTitle" text="Lastmomentbegrenzung" />
-        <text name="fp_lmlEnabledTT" text="Kran bremst und stoppt bei zu viel Last zu weit draußen und sackt bei Überlast ab." />
-        <text name="fp_lmlHydraulicTitle" text="Hydraulik-Grenze" />
-        <text name="fp_lmlHydraulicTT" text="Begrenzt das Hubmoment (Last x Reichweite) wie bei einem echten Kran." />
-        <text name="fp_lmlKnmPerTonneTitle" text="Hubmoment je Tonne Maschine" />
-        <text name="fp_lmlKnmPerTonneTT" text="Erlaubtes Hubmoment pro Tonne Maschinengewicht. Echte Forstkräne: etwa 8-11 kNm/t." />
-        <text name="fp_lmlStabilityTitle" text="Kippschutz" />
-        <text name="fp_lmlStabilityTT" text="Begrenzt den Kran, bevor die Maschine kippt (aus Gewicht, Schwerpunkt und Radstellung)." />
-        <text name="fp_lmlStabilitySafetyTitle" text="Kippschutz greift bei" />
-        <text name="fp_lmlStabilitySafetyTT" text="Anteil der Kipplast, bei dem der Kran stoppt. Kleiner = sicherer." />
-        <text name="fp_lmlSlowdownStartTitle" text="Abbremsen ab" />
-        <text name="fp_lmlSlowdownStartTT" text="Ab dieser Auslastung wird der Kran beim Ausfahren langsamer." />
-        <text name="fp_lmlSaggingTitle" text="Absacken bei Überlast" />
-        <text name="fp_lmlSaggingTT" text="Über 100 % senkt sich der Ausleger langsam ab." />
-        <text name="fp_lmlSagSpeedTitle" text="Absack-Geschwindigkeit" />
-        <text name="fp_lmlSagSpeedTT" text="Anteil der normalen Kran-Geschwindigkeit beim Absacken." />
-        <text name="fp_lmlShowInfoTitle" text="Hinweis anzeigen" />
-        <text name="fp_lmlShowInfoTT" text="Zeigt die Auslastung an, wenn der Kran begrenzt wird." />
     </texts>
 </l10n>

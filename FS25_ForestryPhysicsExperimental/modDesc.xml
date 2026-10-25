@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="114" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://validation.gdn.giants-software.com/xml/fs25/modDesc.xsd">
     <author>NikGro</author>
-    <version>0.2.2.0</version>
+    <version>0.3.0.0</version>
     <title>
         <en>Forestry Physics (experimental)</en>
         <de>Forst-Physik (experimentell)</de>
@@ -12,16 +12,12 @@
 Settings menu: Ctrl+F9 (on foot or in a forestry machine). Every part can be switched off and fine-tuned there.
 
 Fresh-cut log weight:
-- Newly cut logs get the weight of fresh green wood instead of the light base game wood (spruce about 0.80 instead of 0.47 t/m³).
+- Newly cut logs get the weight of fresh green wood instead of the light base game wood (90 % of fresh green wood, spruce about 0.72 instead of 0.47 t/m³).
 - Logs from the savegame are corrected when a grapple picks them up. The selling price does not change.
 
 Stronger grapples (LogGrab):
 - Stronger claws, a stiffer hold that grows with the log weight, less wobble, no free sliding.
 
-Load moment limiter (new):
-- Base game crane hydraulics have no force limit. The crane now slows down and stops when too much load is too far out, and the boom sags slowly when overloaded, like a real crane.
-- Limit from the lifting moment (kNm per tonne of machine weight) and from the tipping stability (weight, centre of mass, wheel positions).
-- Moving in and lowering always work.
 
 In multiplayer the host's settings apply.]]></en>
         <de><![CDATA[EXPERIMENTELLER Script-Mod für die Forst-Physik des Basisspiels. Funktioniert auf jeder Map und mit jeder basisspielkompatiblen Forstmaschine.
@@ -29,16 +25,12 @@ In multiplayer the host's settings apply.]]></en>
 Einstellungsmenü: Strg+F9 (zu Fuß oder in einer Forstmaschine). Dort lässt sich jeder Teil abschalten und fein einstellen.
 
 Frischholz-Gewicht:
-- Neu geschnittene Stämme bekommen das Gewicht von frischem, nassem Holz statt des leichten Basisspiel-Holzes (Fichte etwa 0,80 statt 0,47 t/m³).
+- Neu geschnittene Stämme bekommen das Gewicht von frischem, nassem Holz statt des leichten Basisspiel-Holzes (90 % von frischem Holz, Fichte etwa 0,72 statt 0,47 t/m³).
 - Stämme aus dem Spielstand werden korrigiert, sobald ein Greifer sie aufnimmt. Der Verkaufspreis ändert sich nicht.
 
 Stärkere Greifer (LogGrab):
 - Stärkere Klauen, festerer Halt, der mit dem Stammgewicht wächst, weniger Wackeln, kein freies Rutschen.
 
-Lastmomentbegrenzung (neu):
-- Die Kranhydraulik im Basisspiel hat keine Kraftgrenze. Der Kran wird jetzt bei zu viel Last zu weit draußen langsamer und stoppt, und bei Überlast sackt der Ausleger langsam ab, wie bei einem echten Kran.
-- Grenze aus dem Hubmoment (kNm je Tonne Maschinengewicht) und aus der Kippsicherheit (Gewicht, Schwerpunkt, Radstellung).
-- Einziehen und Absenken funktionieren immer.
 
 Im Multiplayer gelten die Einstellungen des Hosts.]]></de>
     </description>
@@ -48,7 +40,6 @@ Im Multiplayer gelten die Einstellungen des Hosts.]]></de>
     <extraSourceFiles>
         <sourceFile filename="scripts/FPSettings.lua" />
         <sourceFile filename="scripts/ForestryPhysics.lua" />
-        <sourceFile filename="scripts/LoadMomentLimiter.lua" />
         <sourceFile filename="scripts/FPGui.lua" />
         <sourceFile filename="scripts/FPMain.lua" />
     </extraSourceFiles>

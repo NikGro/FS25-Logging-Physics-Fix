@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 from lupa import lua51, luajit21
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'FS25_ForestryPhysicsExperimental')
-SCRIPTS = ['FPSettings.lua', 'ForestryPhysics.lua', 'LoadMomentLimiter.lua', 'FPGui.lua', 'FPMain.lua']
+SCRIPTS = ['FPSettings.lua', 'ForestryPhysics.lua', 'FPGui.lua', 'FPMain.lua']
 
 # ---------------------------------------------------------------- syntax
 for name in SCRIPTS:
@@ -18,7 +18,7 @@ for name in SCRIPTS:
         L = mod.LuaRuntime()
         r = L.eval('function(s,n) local f,e=loadstring(s,n) if f then return "OK" end return e end')(src, name)
         assert r == 'OK', f'{label} {name}: {r}'
-print('syntax OK (5 files, Lua 5.1 + LuaJIT)')
+print('syntax OK (4 files, Lua 5.1 + LuaJIT)')
 
 # ---------------------------------------------------------------- xml backend for getXML*/setXML*
 docs = {}
