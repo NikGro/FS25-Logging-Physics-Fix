@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!--
+    FS25_ForestryPhysicsExperimental - settings
+    Changes take effect after restarting the savegame.
+-->
+<forestryPhysics>
+
+    <!--
+        Fresh-cut log weight.
+        The base game uses roughly dry wood densities (spruce ~0.47 t/m³). Freshly felled wood
+        still contains its water and is much heavier. Every newly cut log piece (chainsaw,
+        harvester, felling command) gets the green density below. Logs that already existed
+        when the savegame was loaded are corrected as soon as a grapple picks them up.
+
+        scale      : multiplier on the densities below (1.0 = realistic green weight,
+                     0.7 = in between, if cranes struggle)
+        maxFactor  : never more than this times the original base game weight
+        logResult  : write the first corrected logs to log.txt (for checking)
+    -->
+    <logWeight enabled="true" scale="1.0" maxFactor="2.0" defaultDensity="0.85" logResult="true">
+        <!-- green density in t/m³ (fresh, before drying) -->
+        <species name="SPRUCE"            density="0.80" />
+        <species name="PINE"              density="0.85" />
+        <species name="PONDEROSAPINE"     density="0.80" />
+        <species name="STONEPINE"         density="0.85" />
+        <species name="LARCH"             density="0.85" />
+        <species name="GIANTSEQUOIA"      density="0.80" />
+        <species name="CYPRESS"           density="0.80" />
+        <species name="POPLAR"            density="0.85" />
+        <species name="WILLOW"            density="0.85" />
+        <species name="BIRCH"             density="0.95" />
+        <species name="MAPLE"             density="0.95" />
+        <species name="AMERICANELM"       density="0.90" />
+        <species name="ASH"               density="0.95" />
+        <species name="BEECH"             density="1.00" />
+        <species name="OAK"               density="1.05" />
+        <species name="LOCUST"            density="1.00" />
+        <species name="SHAGBARKHICKORY"   density="1.05" />
+        <species name="PAGODADOGWOOD"     density="1.00" />
+        <species name="DOWNYSERVICEBERRY" density="0.95" />
+        <species name="MAHOGANY"          density="0.95" />
+        <species name="OLIVETREE"         density="1.05" />
+    </logWeight>
+
+    <!--
+        Grapple grip (all vehicles with the base game LogGrab specialization: crane grapples,
+        forwarder/skidder grapples, loader log grapples).
+
+        clawStrengthScale : multiplier on the claw joints' holding force, spring and damping.
+                            Base game claws are soft limits with a force cap (e.g. 30) and get
+                            pushed open by heavy logs.
+        mountSpringScale  : multiplier on the stiffness of the joint between grapple and log
+                            (base game: 7500 / 1500). Additionally scaled with the log weight.
+        massReference     : log mass in t from which the stiffness grows with the weight
+        maxRotLimit       : max. wobble angle of the log in the grapple in degrees
+                            (base game default 10, some grapples up to 45)
+        lockTranslation   : grapples without lockAllAxis let the log slide freely on two axes.
+                            true limits this to translationRange (m).
+    -->
+    <grab enabled="true" clawStrengthScale="5" mountSpringScale="5" massReference="1.0"
+          maxRotLimit="5" lockTranslation="true" translationRange="0.03" />
+
+    <!--
+        Load moment limiter for forestry cranes (vehicles with LogGrab or WoodHarvester).
+        Base game crane hydraulics have no force limit. This slows down and stops crane
+        movements that move too much load too far out, and lets the boom sag when overloaded.
+
+        hydraulicLimit  : limit the lifting moment (load x reach)
+        kNmPerTonne     : allowed lifting moment per tonne of machine weight
+                          (real: Komatsu 911 approx. 198 kNm at 17.9 t = 11 kNm/t)
+        stabilityLimit  : stop before the machine tips (self propelled machines only)
+        stabilitySafety : share of the tipping load at which the crane stops
+        slowdownStart   : utilisation from which outward movements slow down
+        sagging         : boom lowers slowly above 100 %
+        sagSpeed        : share of the normal crane speed while sagging
+        showInfo        : show a hint while the crane is limited
+    -->
+    <loadMomentLimiter enabled="true" hydraulicLimit="true" kNmPerTonne="10" stabilityLimit="true"
+                       stabilitySafety="0.8" slowdownStart="0.85" sagging="true" sagSpeed="0.3" showInfo="true" />
+
+    <!-- All values above are defaults. Changes in the in-game menu (Ctrl+F9) are stored in
+         modSettings/FS25_ForestryPhysicsExperimental.xml and take precedence. -->
+
+</forestryPhysics>
