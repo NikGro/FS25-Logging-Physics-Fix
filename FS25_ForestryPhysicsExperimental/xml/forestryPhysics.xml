@@ -22,6 +22,7 @@
         <species name="SPRUCE"            density="0.80" />
         <species name="PINE"              density="0.85" />
         <species name="PONDEROSAPINE"     density="0.80" />
+        <species name="LODGEPOLEPINE"     density="0.70" />
         <species name="STONEPINE"         density="0.85" />
         <species name="LARCH"             density="0.85" />
         <species name="GIANTSEQUOIA"      density="0.80" />
