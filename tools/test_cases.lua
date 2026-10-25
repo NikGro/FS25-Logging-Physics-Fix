@@ -10,7 +10,7 @@ local function check(cond, msg) if not cond then dumpLogs() error(msg, 2) end en
 check(s.clawStrength == 5 and s.mountStiffness == 5 and s.maxWobbleDeg == 5, "grab defaults from xml")
 check(s.lmlEnabled and s.lmlKnmPerTonne == 10 and approx(s.lmlStabilitySafety, 0.8), "lml defaults from xml")
 local n = 0 for _ in pairs(s.densities) do n = n + 1 end
-check(n == 21, "species " .. n)
+check(n == 22, "species " .. n)
 for _, d in ipairs(FP.SETTINGS) do
     if d.key ~= nil then check(s[d.key] ~= nil, "default for " .. d.key) end
 end
