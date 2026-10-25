@@ -35,7 +35,29 @@ end
 
 function ForestryPhysicsGui:onOpen()
     ForestryPhysicsGui:superClass().onOpen(self)
+    self:updateRowColors()
     self:fillValues(FP.s)
+end
+
+-- The row containers (fs25_multiTextOptionContainer) are plain white bitmaps until they get the
+-- alternating colors of the settings screen; without this the white text is unreadable.
+function ForestryPhysicsGui:updateRowColors()
+    local colors = SettingsScreen ~= nil and SettingsScreen.COLOR_ALTERNATING or nil
+    if colors == nil or self.boxLayout == nil or self.boxLayout.elements == nil then
+        return
+    end
+    local alternated = false
+    for _, element in ipairs(self.boxLayout.elements) do
+        if element.name ~= nil then
+            alternated = false -- section header
+        elseif element:getIsVisible() and element.setImageColor ~= nil then
+            local c = colors[alternated]
+            if c ~= nil then
+                element:setImageColor(nil, c[1], c[2], c[3], c[4])
+            end
+            alternated = not alternated
+        end
+    end
 end
 
 function ForestryPhysicsGui:fillValues(values)
