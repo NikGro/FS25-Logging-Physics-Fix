@@ -1,0 +1,50 @@
+name: Release on version change
+
+# Builds the mod ZIP and creates a GitHub release whenever the <version> in
+# FS25_ForestryPhysicsExperimental/modDesc.xml has no release tag yet.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      MOD_DIR: FS25_ForestryPhysicsExperimental
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version
+        id: ver
+        run: |
+          VER=$(grep -oP '<version>\K[0-9.]+(?=</version>)' "$MOD_DIR/modDesc.xml" | head -1)
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$VER" >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Tag v$VER exists, nothing to do."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build ZIP
+        if: steps.ver.outputs.exists == 'false'
+        run: |
+          cd "$MOD_DIR"
+          zip -r -X "../$MOD_DIR.zip" . -x '.*'
+
+      - name: Create release
+        if: steps.ver.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: ${{ steps.ver.outputs.version }}
+          files: ${{ env.MOD_DIR }}.zip
+          generate_release_notes: true
