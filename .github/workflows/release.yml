@@ -1,12 +1,16 @@
-name: Release on version change
+name: Release
 
-# Builds the mod ZIP and creates a GitHub release whenever the <version> in
-# FS25_ForestryPhysicsExperimental/modDesc.xml has no release tag yet.
+# Creates a GitHub release with the mod ZIP
+#  - when a tag v* is pushed (release for exactly that tag), or
+#  - on a push to main when the <version> in modDesc.xml has no release yet (tag v<version>).
+# Can also be started by hand (Actions > Release > Run workflow).
 
 on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -16,35 +20,42 @@ jobs:
       contents: write
     env:
       MOD_DIR: FS25_ForestryPhysicsExperimental
+      ZIP_NAME: FS25_ForestryPhysicsExperimental.zip
+      ZIP_CONTENT: .
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Read version
-        id: ver
+      - name: Decide tag
+        id: tag
         run: |
-          VER=$(grep -oP '<version>\K[0-9.]+(?=</version>)' "$MOD_DIR/modDesc.xml" | head -1)
-          echo "version=$VER" >> "$GITHUB_OUTPUT"
-          if git rev-parse -q --verify "refs/tags/v$VER" >/dev/null; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "Tag v$VER exists, nothing to do."
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            TAG="$GITHUB_REF_NAME"
           else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
+            VER=$(grep -oP '<version>\K[0-9.]+(?=</version>)' "$MOD_DIR/modDesc.xml" | head -1)
+            TAG="v$VER"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+            echo "Release $TAG exists, nothing to do."
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build ZIP
-        if: steps.ver.outputs.exists == 'false'
+        if: steps.tag.outputs.needed == 'true'
         run: |
           cd "$MOD_DIR"
-          zip -r -X "../$MOD_DIR.zip" . -x '.*'
+          zip -r -X "$GITHUB_WORKSPACE/$ZIP_NAME" $ZIP_CONTENT -x '.*' -x '*/.*'
 
       - name: Create release
-        if: steps.ver.outputs.exists == 'false'
+        if: steps.tag.outputs.needed == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.ver.outputs.version }}
-          name: ${{ steps.ver.outputs.version }}
-          files: ${{ env.MOD_DIR }}.zip
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          files: ${{ env.ZIP_NAME }}
           generate_release_notes: true
