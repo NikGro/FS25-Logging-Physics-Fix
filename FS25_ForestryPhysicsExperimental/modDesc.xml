@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="114" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://validation.gdn.giants-software.com/xml/fs25/modDesc.xsd">
     <author>NikGro</author>
-    <version>0.3.0.0</version>
+    <version>0.4.0.0</version>
     <title>
         <en>Forestry Physics (experimental)</en>
         <de>Forst-Physik (experimentell)</de>
@@ -17,6 +17,8 @@ Fresh-cut log weight:
 
 Stronger grapples (LogGrab):
 - Stronger claws, a stiffer hold that grows with the log weight, less wobble, no free sliding.
+- Logs are only fixed once the claws have stopped closing (plus a short settle time), so the bundle closes up first.
+- Held logs slide along their axis when pushed hard enough (for example against a wall) and stay there. This lets you align the log ends.
 
 
 In multiplayer the host's settings apply.]]></en>
@@ -30,6 +32,8 @@ Frischholz-Gewicht:
 
 Stärkere Greifer (LogGrab):
 - Stärkere Klauen, festerer Halt, der mit dem Stammgewicht wächst, weniger Wackeln, kein freies Rutschen.
+- Stämme werden erst festgehalten, wenn die Klauen nicht mehr weiter schließen (plus kurzes Nachrücken). So rückt das Bündel vorher zusammen.
+- Gehaltene Stämme rutschen längs, wenn man sie kräftig schiebt (z. B. gegen eine Wand), und bleiben dann dort. So lassen sich die Stammenden ausrichten.
 
 
 Im Multiplayer gelten die Einstellungen des Hosts.]]></de>

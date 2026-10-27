@@ -126,6 +126,7 @@ function FP:deleteMap()
         removeConsoleCommand("fpMenu")
     end
     FP.massApplied = {}
+    FP.slipJoints = {}
     FP.pendingShapes = {}
     FP.gui = nil
 end
@@ -144,6 +145,7 @@ end
 function FP:updateInternal(dt)
     FP.processPendingShapes()
     FP.processClawUpdates()
+    FP.updateSlipJoints(dt)
 
     self.cleanupTimer = (self.cleanupTimer or 0) + dt
     if self.cleanupTimer > FP.CLEANUP_INTERVAL then

@@ -23,5 +23,13 @@
         <text name="fp_maxWobbleDegTT" text="How far the log may tilt in the grapple. Applied from the next grab." />
         <text name="fp_lockTranslationTitle" text="Prevent sliding" />
         <text name="fp_lockTranslationTT" text="Logs no longer slide freely in grapples without locked axes." />
+        <text name="fp_mountAtStallTitle" text="Hold only at stall" />
+        <text name="fp_mountAtStallTT" text="Logs are only fixed when the claws stop closing, so the bundle can settle tightly first." />
+        <text name="fp_settleMsTitle" text="Settle time" />
+        <text name="fp_settleMsTT" text="Extra time after the claws stopped before the logs are fixed." />
+        <text name="fp_axialSlipTitle" text="Push along the log" />
+        <text name="fp_axialSlipTT" text="Held logs can be pushed along their axis, e.g. against a wall, and stay where they were pushed." />
+        <text name="fp_slipForceTitle" text="Force to push" />
+        <text name="fp_slipForceTT" text="How hard you have to push, as a multiple of the log weight. 2-3 holds while slewing and tilting." />
     </texts>
 </l10n>

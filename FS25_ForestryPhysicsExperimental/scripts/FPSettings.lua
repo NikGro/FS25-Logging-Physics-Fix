@@ -44,6 +44,8 @@ local function fmtPercent(v) return string.format("%d %%", math.floor(v * 100 + 
 local function fmtFactor(v) return string.format("x%.2f", v) end
 local function fmtScale(v) return string.format("x%g", v) end
 local function fmtDegree(v) return string.format("%g°", v) end
+local function fmtMs(v) return string.format("%g s", v / 1000) end
+local function fmtWeight(v) return string.format("%g x", v) end
 
 -- settings shown in the in-game menu, in display order
 FP.SETTINGS = {
@@ -58,6 +60,10 @@ FP.SETTINGS = {
     { key = "mountStiffness",     type = "list", values = {1, 2, 3, 4, 5, 6, 8, 10, 15}, format = fmtScale },
     { key = "maxWobbleDeg",       type = "list", values = {1, 2, 3, 5, 8, 10, 15, 25, 45}, format = fmtDegree },
     { key = "lockTranslation",    type = "bool" },
+    { key = "mountAtStall",       type = "bool" },
+    { key = "settleMs",           type = "list", values = {0, 200, 300, 400, 600, 800, 1000}, format = fmtMs },
+    { key = "axialSlip",          type = "bool" },
+    { key = "slipForce",          type = "list", values = {1.5, 2, 2.5, 3, 4, 5}, format = fmtWeight },
 }
 
 FP.SETTINGS_BY_KEY = {}
@@ -81,6 +87,10 @@ function FP.getHardDefaults()
         mountStiffness = 3,
         maxWobbleDeg = 8,
         lockTranslation = true,
+        mountAtStall = true,
+        settleMs = 400,
+        axialSlip = true,
+        slipForce = 2.5,
         translationRange = 0.03,
         massReference = 1.0,
     }
@@ -145,6 +155,10 @@ function FP.loadDefaults()
     s.massReference = readFloat(xmlFile, k .. "#massReference", s.massReference, 0.05)
     s.maxWobbleDeg = readFloat(xmlFile, k .. "#maxRotLimit", s.maxWobbleDeg, 0)
     s.lockTranslation = readBool(xmlFile, k .. "#lockTranslation", s.lockTranslation)
+    s.mountAtStall = readBool(xmlFile, k .. "#mountAtStall", s.mountAtStall)
+    s.settleMs = readFloat(xmlFile, k .. "#settleMs", s.settleMs, 0)
+    s.axialSlip = readBool(xmlFile, k .. "#axialSlip", s.axialSlip)
+    s.slipForce = readFloat(xmlFile, k .. "#slipForce", s.slipForce, 0.5)
     s.translationRange = readFloat(xmlFile, k .. "#translationRange", s.translationRange, 0)
 
     delete(xmlFile)

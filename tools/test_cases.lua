@@ -173,3 +173,92 @@ saveXMLFile(old)
 local fresh2 = FP.getHardDefaults()
 check(FP.loadUserSettings(fresh2) == false and fresh2.clawStrength == 3, "old settings file ignored")
 _print("K: old settings ignored")
+
+-- L: logs are fixed only when the claws stall + settle time
+do
+    local actor0 = newNode("clawTarget", comp2, 0, 0, 0)
+    local actor1 = newNode("clawBody", comp2, 0, 0, 0)
+    local grab = {dynamicMountedShapes = {}, pendingDynamicMountShapes = {[logNode] = true}}
+    local claw = {jointActor0 = actor0, jointActor1 = actor1, axis = 3, fpGrab = grab}
+    local base = true
+    local cv = {fpOriginalClawState = function() return base end, getParentComponent = function() return comp2 end}
+    s.mountAtStall, s.settleMs = true, 400
+    local function step(moveRad)
+        local r = NODES[actor1].r
+        NODES[actor1].r = {r[1], r[2], r[3] + moveRad}
+        return FP.safeClawState(cv, claw, 16, false, false)
+    end
+    -- claws still closing (2 deg per frame) -> not fixed although the game says "closed"
+    for _ = 1, 30 do check(step(math.rad(2)) == false, "closing claws: not fixed yet") end
+    -- claws stopped: fixed after 400 ms
+    local fixedAt
+    for i = 1, 60 do if step(0) and fixedAt == nil then fixedAt = i * 16 end end
+    check(fixedAt ~= nil and fixedAt >= 400 and fixedAt <= 450, "fixed after settle time " .. tostring(fixedAt))
+    -- already holding logs: game behaviour unchanged
+    grab.dynamicMountedShapes[logNode] = {}
+    check(step(math.rad(2)) == true, "holding logs: pass through")
+    grab.dynamicMountedShapes = {}
+    -- safety: never longer than 2 s, even if the claws keep creeping
+    claw.fpDelay, claw.fpStill = 0, 0
+    local n = 0
+    while not step(math.rad(1)) do n = n + 1 if n > 500 then break end end
+    check(n * 16 <= 2016, "max delay 2 s, was " .. n * 16)
+    -- feature off
+    s.mountAtStall = false
+    check(step(math.rad(2)) == true, "mountAtStall off: game timing")
+    s.mountAtStall = true
+    _print("L: fix at stall OK")
+end
+
+-- M: axial slip joint: force limit on the log axis, re-anchor where the log was pushed to
+do
+    local jr = newNode("grabRoot", 0, 0, 0, 0)
+    local jn = newNode("grabJointNode", jr, 0, 0, 0)
+    local td = newNode("treeDetection", jr, 0, 0, 0)
+    local shape = newNode("heavyLog", 0, 0, 0, 0)
+    SHAPES[shape] = {mass = 0.8, volume = 1.0, body = RigidBodyType.DYNAMIC, split = 1, massSet = true}
+    local grab = {jointRoot = jr, jointNode = jn, treeDetectionNode = td, treeDetectionNodeSizeY = 1, treeDetectionNodeSizeZ = 1,
+        rotLimit = math.rad(10), lockAllAxis = true}
+    local mv = {fpOriginalMountSplitShape = function() error("fallback used") end}
+    s.axialSlip, s.slipForce = true, 2.5
+    local lastConstr
+    local origNew = JointConstructor.new
+    JointConstructor.new = function() lastConstr = origNew() return lastConstr end
+    local ji, jt = FP.safeMountSplitShape(mv, grab, shape)
+    JointConstructor.new = origNew
+    local forceLimit, transLimit0
+    for _, c in ipairs(lastConstr.calls) do
+        if c[1] == "setTranslationLimitForceLimit" then forceLimit = c[2] end
+        if c[1] == "setTranslationLimit" and c[2] == 0 then transLimit0 = {c[3], c[4], c[5]} end
+    end
+    check(ji == 77 and FP.slipJoints[jt] ~= nil, "slip joint registered")
+    check(transLimit0 ~= nil and transLimit0[1] == true and transLimit0[2] == 0 and transLimit0[3] == 0, "log axis locked with limit spring")
+    check(forceLimit ~= nil and approx(forceLimit, 2.5 * 0.8 * 9.81, 1e-6), "force limit 2.5 x weight: " .. tostring(forceLimit))
+    -- log pushed 20 cm along x (against a wall) -> joint re-anchored by 20 cm, frame of actor 0 updated
+    local x0 = getWorldTranslation(jt)
+    setTranslation(shape, 0.2, 0, 0)
+    FP.slipTimer = 1000
+    JOINT_FRAMES = {}
+    FP.updateSlipJoints(16)
+    local x1 = getWorldTranslation(jt)
+    check(approx(x1 - x0, 0.2, 1e-6) and #JOINT_FRAMES == 1 and JOINT_FRAMES[1][1] == 77 and JOINT_FRAMES[1][2] == 0, "re-anchored")
+    -- tiny movement below 5 mm: no update
+    setTranslation(shape, 0.203, 0, 0)
+    FP.slipTimer = 1000
+    JOINT_FRAMES = {}
+    FP.updateSlipJoints(16)
+    check(#JOINT_FRAMES == 0, "no re-anchor below 5 mm")
+    -- unmounted: record removed
+    NODES[jt] = nil
+    FP.slipTimer = 1000
+    FP.updateSlipJoints(16)
+    check(FP.slipJoints[jt] == nil, "record removed after unmount")
+    -- switched off: no slip joint
+    s.axialSlip = false
+    JointConstructor.new = function() lastConstr = origNew() return lastConstr end
+    local ji2, jt2 = FP.safeMountSplitShape(mv, grab, shape)
+    JointConstructor.new = origNew
+    check(FP.slipJoints[jt2] == nil, "axialSlip off: no slip joint")
+    s.axialSlip = true
+    _print("M: axial slip OK")
+end

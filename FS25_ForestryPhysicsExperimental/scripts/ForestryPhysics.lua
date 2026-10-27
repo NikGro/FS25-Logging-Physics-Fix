@@ -242,6 +242,16 @@ function FP.onLogGrabPostLoad(vehicle, savegame)
         vehicle.fpOriginalMountSplitShape = vehicle.mountSplitShape
         vehicle.mountSplitShape = FP.safeMountSplitShape
     end
+    -- claws: fix the logs only once the claws stopped closing
+    if vehicle.fpOriginalClawState == nil and vehicle.updateLogGrabClawState ~= nil then
+        for _, grab in ipairs(spec.grabs) do
+            for _, claw in ipairs(grab.claws or {}) do
+                claw.fpGrab = grab
+            end
+        end
+        vehicle.fpOriginalClawState = vehicle.updateLogGrabClawState
+        vehicle.updateLogGrabClawState = FP.safeClawState
+    end
 
     FP.logInfo("Grapple '%s': %d claw joint(s) adjusted.", tostring(vehicle.configFileName), numClaws)
 end
@@ -272,6 +282,111 @@ function FP.processClawUpdates()
     FP.clawUpdatePending = not allDone
 end
 
+
+-- -----------------------------------------------------------------------------
+-- fixing the logs only when the claws stall (they press against the bundle and do not close
+-- any further), plus settleMs. Until then the claws physically push the logs together.
+-- -----------------------------------------------------------------------------
+
+FP.STALL_RATE = math.rad(2) / 1000  -- rad per ms below which a claw counts as standing still
+FP.STALL_MAX_DELAY = 2000           -- never delay the fixing longer than this after the game said "closed"
+
+function FP.getClawAngle(vehicle, claw)
+    local ref = claw.fpRefNode
+    if ref == nil then
+        ref = vehicle.getParentComponent ~= nil and vehicle:getParentComponent(claw.jointActor0) or getParent(claw.jointActor0)
+        claw.fpRefNode = ref
+    end
+    local rx, ry, rz = localRotationToLocal(claw.jointActor1, ref, 0, 0, 0)
+    if claw.axis == 1 then
+        return rx
+    elseif claw.axis == 2 then
+        return ry
+    end
+    return rz
+end
+
+function FP.clawState(self, claw, dt, ignoreTiming, forceDirty)
+    local result = self.fpOriginalClawState(self, claw, dt, ignoreTiming, forceDirty)
+    local s = FP.s
+    local grab = claw.fpGrab
+    if ignoreTiming or not s.grabEnabled or not s.mountAtStall or grab == nil
+        or claw.jointActor0 == nil or claw.jointActor1 == nil then
+        return result
+    end
+
+    local angle = FP.getClawAngle(self, claw)
+    local last = claw.fpLastAngle or angle
+    claw.fpLastAngle = angle
+    if not result then
+        claw.fpStill = 0
+        claw.fpDelay = 0
+        return result
+    end
+    -- already holding logs, or nothing to grab: game behaviour
+    if next(grab.dynamicMountedShapes) ~= nil or next(grab.pendingDynamicMountShapes) == nil then
+        return result
+    end
+
+    if math.abs(angle - last) / math.max(dt, 1) < FP.STALL_RATE then
+        claw.fpStill = (claw.fpStill or 0) + dt
+    else
+        claw.fpStill = 0
+    end
+    claw.fpDelay = (claw.fpDelay or 0) + dt
+    if claw.fpStill >= s.settleMs or claw.fpDelay >= FP.STALL_MAX_DELAY then
+        return true
+    end
+    return false
+end
+
+function FP.safeClawState(self, claw, dt, ignoreTiming, forceDirty)
+    if not FP.clawStateDisabled then
+        local ok, result = pcall(FP.clawState, self, claw, dt, ignoreTiming, forceDirty)
+        if ok then
+            return result
+        end
+        FP.clawStateDisabled = true
+        FP.logError("Claw stall check error, using base game timing for this session: %s", tostring(result))
+    end
+    return self.fpOriginalClawState(self, claw, dt, ignoreTiming, forceDirty)
+end
+
+-- -----------------------------------------------------------------------------
+-- axial slip: along its own axis a held log has a force limited joint; when it is pushed harder
+-- (wall, ground, another log) it slides, and the joint is re-anchored where it was pushed to.
+-- -----------------------------------------------------------------------------
+
+FP.slipJoints = {}
+FP.SLIP_INTERVAL = 100   -- ms between re-anchor checks
+FP.SLIP_MIN_MOVE = 0.005 -- m
+FP.slipTimer = 0
+
+function FP.updateSlipJoints(dt)
+    if next(FP.slipJoints) == nil or g_currentMission == nil or not g_currentMission:getIsServer() then
+        return
+    end
+    FP.slipTimer = FP.slipTimer + dt
+    if FP.slipTimer < FP.SLIP_INTERVAL then
+        return
+    end
+    FP.slipTimer = 0
+    for key, rec in pairs(FP.slipJoints) do
+        if not entityExists(rec.jointTransform) or not entityExists(rec.shape) then
+            FP.slipJoints[key] = nil  -- unmounted (the game deleted the joint transform) or log gone
+        else
+            local wx, wy, wz = localToWorld(rec.shape, rec.lx, rec.ly, rec.lz)
+            local dx = worldToLocal(rec.jointTransform, wx, wy, wz)
+            if math.abs(dx) > FP.SLIP_MIN_MOVE then
+                local ox, oy, oz = localDirectionToWorld(rec.jointTransform, dx, 0, 0)
+                local tx, ty, tz = getWorldTranslation(rec.jointTransform)
+                setWorldTranslation(rec.jointTransform, tx + ox, ty + oy, tz + oz)
+                setJointFrame(rec.jointIndex, 0, rec.jointTransform)
+            end
+        end
+    end
+end
+
 -- replacement for LogGrab:mountSplitShape(grab, shapeId), same structure as the base game
 function FP.mountSplitShape(self, grab, shapeId)
     local s = FP.s
@@ -294,10 +409,16 @@ function FP.mountSplitShape(self, grab, shapeId)
     local yx, yy, yz = localDirectionToWorld(grab.treeDetectionNode, 0, 1, 0)
     local minY, maxY, minZ, maxZ = testSplitShape(shapeId, cx, cy, cz, nx, ny, nz, yx, yy, yz,
         grab.treeDetectionNodeSizeY, grab.treeDetectionNodeSizeZ)
+    local slip = false
     if minY ~= nil then
         link(grab.jointNode, jointTransform)
         local x, y, z = localToWorld(grab.treeDetectionNode, 0, (minY + maxY) * 0.5, (minZ + maxZ) * 0.5)
         setWorldTranslation(jointTransform, x, y, z)
+        -- joint x axis = log axis (the tree detection plane normal) for the slip along the log
+        if s.axialSlip and not grab.limitYAxis then
+            setWorldRotation(jointTransform, getWorldRotation(grab.treeDetectionNode))
+            slip = true
+        end
 
         constr:setRotationLimit(0, -rotLimit, rotLimit)
         constr:setRotationLimit(1, -rotLimit, rotLimit)
@@ -344,13 +465,25 @@ function FP.mountSplitShape(self, grab, shapeId)
     local springDamping = FP.BASE_MOUNT_DAMPING * s.mountStiffness * massFactor
     constr:setRotationLimitSpring(springForce, springDamping, springForce, springDamping, springForce, springDamping)
     constr:setTranslationLimitSpring(springForce, springDamping, springForce, springDamping, springForce, springDamping)
+    if slip then
+        -- locked on the log axis, but the limit spring may only pull with slipForce x log weight (kN)
+        constr:setTranslationLimit(0, true, 0, 0)
+        constr:setTranslationLimitForceLimit(s.slipForce * math.max(mass, 0.05) * 9.81, -1, -1)
+    end
 
     grab.componentLimitsDirty = true
 
     g_messageCenter:publish(MessageType.TREE_SHAPE_MOUNTED, shapeId, self)
     SpecializationUtil.raiseEvent(self, "onLogGrabMountedTreesChanged", grab)
 
-    return constr:finalize(), jointTransform
+    local jointIndex = constr:finalize()
+    if slip and jointIndex ~= nil and jointIndex ~= 0 then
+        local tx, ty, tz = getWorldTranslation(jointTransform)
+        local lx, ly, lz = worldToLocal(shapeId, tx, ty, tz)
+        FP.slipJoints[jointTransform] = {jointIndex = jointIndex, jointTransform = jointTransform, shape = shapeId,
+            lx = lx, ly = ly, lz = lz}
+    end
+    return jointIndex, jointTransform
 end
 
 -- an error in our version must never break the grapple: fall back to the base game function
