@@ -146,20 +146,7 @@ JointConstructor = {new = function()
 end}
 createTransformGroup = function(name) return newNode(name, 0) end
 link = function(p, c) NODES[c].parent = p end
-function worldToLocal(n, x, y, z)
-    local r, t = world(n)
-    x, y, z = x - t[1], y - t[2], z - t[3]
-    return r[1][1] * x + r[2][1] * y + r[3][1] * z, r[1][2] * x + r[2][2] * y + r[3][2] * z, r[1][3] * x + r[2][3] * y + r[3][3] * z
-end
-setWorldTranslation = function(n, x, y, z)
-    local p = NODES[n].parent
-    if p == 0 then NODES[n].t = {x, y, z} else NODES[n].t = {worldToLocal(p, x, y, z)} end
-end
-getWorldRotation = function(n) return 0, 0, 0 end
-setWorldRotation = function(n, x, y, z) NODES[n].r = {x, y, z} end
-localRotationToLocal = function(a, b) return NODES[a].r[1], NODES[a].r[2], NODES[a].r[3] end
-JOINT_FRAMES = {}
-setJointFrame = function(j, actor, node) table.insert(JOINT_FRAMES, {j, actor, node}) end
+setWorldTranslation = function() end
 testSplitShape = function() return -0.2, 0.2, -0.2, 0.2 end
 SpecializationUtil = {raiseEvent = function() end}
 removeJoint = function() end

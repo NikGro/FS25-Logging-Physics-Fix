@@ -60,30 +60,6 @@
         </BinaryOption>
         <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_lockTranslationTitle" />
       </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <BinaryOption profile="fs25_settingsBinaryOption" id="opt_mountAtStall">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_mountAtStallTT" />
-        </BinaryOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_mountAtStallTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <MultiTextOption profile="fs25_settingsMultiTextOption" id="opt_settleMs">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_settleMsTT" />
-        </MultiTextOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_settleMsTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <BinaryOption profile="fs25_settingsBinaryOption" id="opt_axialSlip">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_axialSlipTT" />
-        </BinaryOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_axialSlipTitle" />
-      </Bitmap>
-      <Bitmap profile="fs25_multiTextOptionContainer">
-        <MultiTextOption profile="fs25_settingsMultiTextOption" id="opt_slipForce">
-          <Text profile="fs25_multiTextOptionTooltip" name="ignore" text="$l10n_fp_slipForceTT" />
-        </MultiTextOption>
-        <Text profile="fs25_settingsMultiTextOptionTitle" text="$l10n_fp_slipForceTitle" />
-      </Bitmap>
     </ScrollingLayout>
     <Bitmap profile="fs25_settingsTooltipSeparator" />
     <Bitmap profile="fs25_startClipper" name="topClipper" />

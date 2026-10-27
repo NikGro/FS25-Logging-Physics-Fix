@@ -23,13 +23,5 @@
         <text name="fp_maxWobbleDegTT" text="Wie weit der Stamm im Greifer kippen darf. Gilt ab dem nächsten Greifen." />
         <text name="fp_lockTranslationTitle" text="Rutschen verhindern" />
         <text name="fp_lockTranslationTT" text="Stämme rutschen in Greifern ohne feste Achsen nicht mehr frei hin und her." />
-        <text name="fp_mountAtStallTitle" text="Erst bei Anschlag festhalten" />
-        <text name="fp_mountAtStallTT" text="Stämme werden erst festgehalten, wenn die Klauen nicht weiter zugehen. So rückt sich das Bündel vorher eng zusammen." />
-        <text name="fp_settleMsTitle" text="Nachrücken" />
-        <text name="fp_settleMsTT" text="Zusätzliche Zeit nach dem Anschlag, bevor die Stämme festgehalten werden." />
-        <text name="fp_axialSlipTitle" text="Längs nachschieben" />
-        <text name="fp_axialSlipTT" text="Gegriffene Stämme lassen sich entlang ihrer Achse verschieben, z. B. gegen eine Wand drücken, und bleiben dann dort." />
-        <text name="fp_slipForceTitle" text="Kraft zum Nachschieben" />
-        <text name="fp_slipForceTT" text="Wie fest man drücken muss, als Vielfaches des Stammgewichts. 2-3 hält beim Schwenken und Kippen." />
     </texts>
 </l10n>

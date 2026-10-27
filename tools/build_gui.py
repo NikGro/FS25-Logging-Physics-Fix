@@ -32,14 +32,6 @@ TEXTS = {
                      ('Max. wobble', 'How far the log may tilt in the grapple. Applied from the next grab.')),
     'lockTranslation': (('Rutschen verhindern', 'Stämme rutschen in Greifern ohne feste Achsen nicht mehr frei hin und her.'),
                         ('Prevent sliding', 'Logs no longer slide freely in grapples without locked axes.')),
-    'mountAtStall': (('Erst bei Anschlag festhalten', 'Stämme werden erst festgehalten, wenn die Klauen nicht weiter zugehen. So rückt sich das Bündel vorher eng zusammen.'),
-                     ('Hold only at stall', 'Logs are only fixed when the claws stop closing, so the bundle can settle tightly first.')),
-    'settleMs': (('Nachrücken', 'Zusätzliche Zeit nach dem Anschlag, bevor die Stämme festgehalten werden.'),
-                 ('Settle time', 'Extra time after the claws stopped before the logs are fixed.')),
-    'axialSlip': (('Längs nachschieben', 'Gegriffene Stämme lassen sich entlang ihrer Achse verschieben, z. B. gegen eine Wand drücken, und bleiben dann dort.'),
-                  ('Push along the log', 'Held logs can be pushed along their axis, e.g. against a wall, and stay where they were pushed.')),
-    'slipForce': (('Kraft zum Nachschieben', 'Wie fest man drücken muss, als Vielfaches des Stammgewichts. 2-3 hält beim Schwenken und Kippen.'),
-                  ('Force to push', 'How hard you have to push, as a multiple of the log weight. 2-3 holds while slewing and tilting.')),
 
 }
 
